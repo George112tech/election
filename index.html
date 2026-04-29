@@ -450,14 +450,46 @@ body > * {
 .live-chart-block .legend-pct { font-weight: 700; color: var(--forest); margin-left: auto; }
 
 /* Device list */
-.device-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; background: var(--ivory); border: 1px solid var(--border); margin-bottom: 5px; font-size: 12px; animation: fade-in 0.3s ease; }
+.device-item {
+  display: flex; flex-direction: column; gap: 0;
+  padding: 10px 10px 8px; border-radius: 8px;
+  background: var(--ivory); border: 1px solid var(--border);
+  margin-bottom: 8px; font-size: 12px; animation: fade-in 0.3s ease;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.device-item.active-device   { border-color: rgba(5,150,105,0.35); background: #f0fdf8; }
+.device-item.inactive-device { border-color: rgba(220,38,38,0.20); background: #fff8f8; }
+.device-item-top { display: flex; align-items: center; gap: 8px; }
 .device-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 .device-dot.active   { background: var(--success); box-shadow: 0 0 0 3px rgba(5,150,105,0.2); animation: pulse-device 1.8s infinite; }
-.device-dot.inactive { background: #aaa; }
-.device-name { flex: 1; font-weight: 500; color: var(--text); }
-.device-badge { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 8px; }
-.device-badge.active   { background: rgba(5,150,105,0.12); color: var(--success); }
-.device-badge.inactive { background: rgba(100,100,100,0.10); color: #888; }
+.device-dot.inactive { background: #dc2626; }
+.device-name { flex: 1; font-weight: 600; color: var(--text); font-size: 12px; }
+.device-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 8px; flex-shrink: 0; }
+.device-badge.active   { background: rgba(5,150,105,0.14); color: var(--success); }
+.device-badge.inactive { background: rgba(220,38,38,0.12); color: #dc2626; }
+.device-details {
+  margin-top: 7px; padding-top: 7px;
+  border-top: 1px solid var(--ivory-dk);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px;
+}
+.device-detail-row { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-lt); }
+.device-detail-row strong { color: var(--text); font-weight: 600; font-size: 10px; }
+.device-item-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; gap: 6px; }
+.btn-device-toggle {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 3px 10px; border-radius: 6px; border: 1.5px solid;
+  cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.12s;
+  line-height: 1.4;
+}
+.btn-device-toggle:active { transform: scale(0.95); }
+.btn-device-toggle.disconnect {
+  background: transparent; color: #dc2626; border-color: #dc2626;
+}
+.btn-device-toggle.disconnect:hover { background: #dc2626; color: white; }
+.btn-device-toggle.reconnect {
+  background: transparent; color: var(--success); border-color: var(--success);
+}
+.btn-device-toggle.reconnect:hover { background: var(--success); color: white; }
 @keyframes pulse-device { 0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,0.4);} 50%{box-shadow:0 0 0 5px rgba(5,150,105,0);} }
 
 /* ════ FINAL RESULTS ════ */
@@ -912,6 +944,70 @@ body.terminal-mode { background: var(--forest-dk); display: flex; align-items: c
 }
 .modal-close-btn:hover { color: var(--text); transform: rotate(90deg); }
 
+/* ════ CANDIDATE CARD ACTIONS ════ */
+.candidate-card {
+  flex-direction: column; align-items: flex-start;
+}
+.cand-card-top { display: flex; align-items: center; gap: 12px; width: 100%; }
+.cand-card-actions {
+  display: flex; gap: 6px; width: 100%; margin-top: 10px;
+  border-top: 1px solid var(--ivory-dk); padding-top: 10px;
+}
+.cand-card-actions .btn-action {
+  flex: 1; padding: 6px 0; font-size: 12px; font-weight: 600;
+  border: none; border-radius: 6px; cursor: pointer; letter-spacing: 0.02em;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  font-family: var(--font-body);
+}
+.btn-action-edit { background: var(--ivory-dk); color: var(--forest); }
+.btn-action-edit:hover { background: var(--lemon-lt); color: var(--forest-dk); box-shadow: 0 2px 8px rgba(126,198,72,0.25); }
+.btn-action-delete { background: rgba(220,38,38,0.08); color: var(--error); }
+.btn-action-delete:hover { background: var(--error); color: white; box-shadow: 0 2px 8px rgba(220,38,38,0.25); }
+.btn-action:active { transform: scale(0.95); }
+
+/* ════ VOTER TABLE ACTION BUTTONS ════ */
+.voter-action-cell { white-space: nowrap; }
+.voter-action-cell .btn-action {
+  padding: 5px 10px; font-size: 12px; font-weight: 600;
+  border: none; border-radius: 6px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  font-family: var(--font-body); margin-right: 4px;
+}
+.voter-action-cell .btn-action:last-child { margin-right: 0; }
+.voter-action-cell .btn-action:active { transform: scale(0.95); }
+
+/* ════ EDIT MODAL ════ */
+.edit-modal-overlay {
+  position: fixed; inset: 0; background: rgba(17,29,20,0.68);
+  backdrop-filter: blur(5px); z-index: 6000;
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.edit-modal-overlay.open { display: flex; animation: modal-drop 0.3s cubic-bezier(0.22,1,0.36,1); }
+.edit-modal-box {
+  background: var(--white); border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.32);
+  max-width: 440px; width: 100%; padding: 32px 28px;
+  border-top: 4px solid var(--lemon-dk);
+  position: relative;
+}
+.edit-modal-box h3 {
+  font-family: var(--font-head); font-size: 22px; color: var(--forest);
+  margin-bottom: 6px;
+}
+.edit-modal-box .edit-modal-sub {
+  font-size: 13px; color: var(--text-lt); margin-bottom: 22px;
+}
+.edit-modal-actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; }
+.edit-modal-close {
+  position: absolute; top: 14px; right: 16px;
+  background: none; border: none; cursor: pointer;
+  font-size: 20px; color: var(--text-lt); line-height: 1;
+  transition: color 0.15s, transform 0.15s;
+}
+.edit-modal-close:hover { color: var(--text); transform: rotate(90deg); }
+
 /* ════ MISC ════ */
 .muted { color: var(--text-lt); font-size: 14px; }
 .error-text { color: var(--error); font-size: 14px; }
@@ -1101,7 +1197,7 @@ body.terminal-mode { background: var(--forest-dk); display: flex; align-items: c
           <div class="device-status">
             <div class="device-count" id="connected-devices">0</div>
             <div style="font-size:12px; color:var(--text-lt); margin-bottom:10px;">Devices Connected</div>
-            <div id="device-list" style="text-align:left; max-height:200px; overflow-y:auto;"></div>
+            <div id="device-list" style="text-align:left; max-height:320px; overflow-y:auto;"></div>
           </div>
           <div style="margin-top:16px;">
             <button class="btn btn-outline btn-sm" onclick="generateQRCode()" style="width:100%;">Refresh QR Code</button>
@@ -1116,6 +1212,50 @@ body.terminal-mode { background: var(--forest-dk); display: flex; align-items: c
   </section>
 
 </main>
+
+<!-- ════ EDIT CANDIDATE MODAL ════ -->
+<div id="edit-candidate-modal" class="edit-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-cand-title">
+  <div class="edit-modal-box">
+    <button class="edit-modal-close" onclick="closeEditCandidateModal()" aria-label="Close">✕</button>
+    <h3 id="edit-cand-title">Edit Candidate</h3>
+    <p class="edit-modal-sub">Update the candidate's name or position below.</p>
+    <input type="hidden" id="edit-cand-id"/>
+    <div class="form-group">
+      <label for="edit-cand-name">Student Name</label>
+      <input type="text" id="edit-cand-name" placeholder="Full name"/>
+    </div>
+    <div class="form-group">
+      <label for="edit-cand-position">Position</label>
+      <select id="edit-cand-position"></select>
+    </div>
+    <div class="edit-modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeEditCandidateModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveEditCandidate()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ EDIT VOTER MODAL ════ -->
+<div id="edit-voter-modal" class="edit-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-voter-title">
+  <div class="edit-modal-box">
+    <button class="edit-modal-close" onclick="closeEditVoterModal()" aria-label="Close">✕</button>
+    <h3 id="edit-voter-title">Edit Voter</h3>
+    <p class="edit-modal-sub">Update the voter's name or academic year below.</p>
+    <input type="hidden" id="edit-voter-id"/>
+    <div class="form-group">
+      <label for="edit-voter-name">Student Name</label>
+      <input type="text" id="edit-voter-name" placeholder="Full name"/>
+    </div>
+    <div class="form-group">
+      <label for="edit-voter-year">Academic Year</label>
+      <input type="text" id="edit-voter-year" placeholder="e.g. 2024/2025"/>
+    </div>
+    <div class="edit-modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeEditVoterModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveEditVoter()">Save Changes</button>
+    </div>
+  </div>
+</div>
 
 <!-- ════ NEW YEAR REGISTRATION MODAL ════ -->
 <div id="new-year-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="new-year-modal-title">
@@ -1260,6 +1400,20 @@ async function addCandidate({ name, academic_year, position_id, photo_url }) {
     return data;
   }, null);
 }
+async function updateCandidate(id, { name, position_id }) {
+  return safeDb(async () => {
+    const { data, error } = await db.from('candidates').update({ name, position_id }).eq('id', id).select('*, positions(title)').single();
+    if (error) throw error;
+    return data;
+  }, null);
+}
+async function deleteCandidate(id) {
+  return safeDb(async () => {
+    const { error } = await db.from('candidates').delete().eq('id', id);
+    if (error) throw error;
+    return true;
+  }, null);
+}
 async function uploadCandidatePhoto(file) {
   return safeDb(async () => {
     const fileName = `${Date.now()}_${file.name.replace(/\s/g, '_')}`;
@@ -1283,6 +1437,20 @@ async function addVoter({ name, academic_year }) {
     const { data, error } = await db.from('voters').insert({ name, academic_year, pin: null, pin_used: false }).select().single();
     if (error) throw error;
     return data;
+  }, null);
+}
+async function updateVoter(id, { name, academic_year }) {
+  return safeDb(async () => {
+    const { data, error } = await db.from('voters').update({ name, academic_year }).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
+  }, null);
+}
+async function deleteVoter(id) {
+  return safeDb(async () => {
+    const { error } = await db.from('voters').delete().eq('id', id);
+    if (error) throw error;
+    return true;
   }, null);
 }
 
@@ -1791,16 +1959,30 @@ function renderCandidateList() {
     if (!byPosition[posTitle]) byPosition[posTitle] = [];
     byPosition[posTitle].push(c);
   }
+  const canEdit = appState.electionStatus === STATE.REGISTRATION_OPEN;
   container.innerHTML = Object.entries(byPosition).map(([pos, cands]) => `
     <div class="candidate-group">
       <h4 class="group-title">${pos}</h4>
       <div class="candidate-cards">
         ${cands.map(c => `
           <div class="candidate-card">
-            <div class="cand-photo-wrap">
-              ${c.photo_url ? `<img src="${c.photo_url}" alt="${c.name}" class="cand-thumb"/>` : `<div class="cand-no-photo">${c.name[0]}</div>`}
+            <div class="cand-card-top">
+              <div class="cand-photo-wrap">
+                ${c.photo_url ? `<img src="${c.photo_url}" alt="${c.name}" class="cand-thumb"/>` : `<div class="cand-no-photo">${c.name[0]}</div>`}
+              </div>
+              <div class="cand-info"><strong>${c.name}</strong><span>${c.academic_year}</span></div>
             </div>
-            <div class="cand-info"><strong>${c.name}</strong><span>${c.academic_year}</span></div>
+            ${canEdit ? `
+            <div class="cand-card-actions">
+              <button class="btn-action btn-action-edit" onclick="openEditCandidateModal('${c.id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Edit
+              </button>
+              <button class="btn-action btn-action-delete" onclick="deleteCandidateHandler('${c.id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                Delete
+              </button>
+            </div>` : ''}
           </div>
         `).join('')}
       </div>
@@ -1868,15 +2050,27 @@ function renderVoterList() {
   const container = document.getElementById('voter-list');
   if (!container) return;
   if (!appState.voters.length) { container.innerHTML = '<p class="muted">No voters registered yet.</p>'; return; }
+  const canEdit = appState.electionStatus === STATE.REGISTRATION_OPEN;
   container.innerHTML = `
     <table class="data-table">
-      <thead><tr><th>#</th><th>Name</th><th>Year</th><th>PIN</th><th>Used</th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Year</th><th>PIN</th><th>Used</th>${canEdit ? '<th>Actions</th>' : ''}</tr></thead>
       <tbody>
         ${appState.voters.map((v, i) => `
           <tr>
             <td>${i + 1}</td><td>${v.name}</td><td>${v.academic_year}</td>
             <td>${v.pin ? `<code class="pin-code">${v.pin}</code>` : '<span class="muted">—</span>'}</td>
             <td>${v.pin_used ? '<span class="badge used">Used</span>' : '<span class="badge unused">Unused</span>'}</td>
+            ${canEdit ? `
+            <td class="voter-action-cell">
+              <button class="btn-action btn-action-edit" onclick="openEditVoterModal('${v.id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Edit
+              </button>
+              <button class="btn-action btn-action-delete" onclick="deleteVoterHandler('${v.id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                Delete
+              </button>
+            </td>` : ''}
           </tr>
         `).join('')}
       </tbody>
@@ -2097,33 +2291,101 @@ function generateQRCode() {
   if (urlText) urlText.textContent = terminalUrl;
 }
 
+// Persists all known terminals across presence events (key = deviceId)
+const knownDevices = {};
+
 function updateConnectedDevices(devices) {
-  // devices: array of { id, joinedAt, lastSeen, active } OR a plain count number (legacy)
+  // devices: array of { id, joinedAt, active, driveType, ipAddress, location }
   const countEl = document.getElementById('connected-devices');
   const listEl  = document.getElementById('device-list');
+
   if (typeof devices === 'number') {
     appState.connectedDevices = devices;
     if (countEl) countEl.textContent = devices;
     return;
   }
-  appState.connectedDevices = devices.length;
-  if (countEl) countEl.textContent = devices.length;
+
+  // Merge incoming devices into knownDevices — mark absent ones inactive
+  const activeIds = new Set(devices.map(d => d.id));
+
+  // Add / update active devices
+  for (const d of devices) {
+    knownDevices[d.id] = { ...knownDevices[d.id], ...d, connected: true };
+  }
+  // Mark previously seen devices that are no longer in presence as disconnected
+  for (const id of Object.keys(knownDevices)) {
+    if (!activeIds.has(id)) {
+      knownDevices[id] = { ...knownDevices[id], connected: false };
+    }
+  }
+
+  const allDevices = Object.values(knownDevices);
+  const activeCount = allDevices.filter(d => d.connected !== false).length;
+  appState.connectedDevices = activeCount;
+  if (countEl) countEl.textContent = activeCount;
   if (!listEl) return;
-  if (!devices.length) {
-    listEl.innerHTML = '<p style="font-size:12px;color:var(--text-lt);text-align:center;padding:6px 0;">No terminals connected yet</p>';
+
+  if (!allDevices.length) {
+    listEl.innerHTML = '<p style="font-size:12px;color:var(--text-lt);text-align:center;padding:8px 0;">No terminals connected yet</p>';
     return;
   }
-  listEl.innerHTML = devices.map((d, i) => {
-    const isActive = d.active !== false;
-    const label = `Terminal ${i + 1}`;
-    const since = d.joinedAt ? new Date(d.joinedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
+
+  // Sort: active first, then by join time
+  const sorted = [...allDevices].sort((a, b) => {
+    if ((a.connected !== false) !== (b.connected !== false)) return (b.connected !== false) ? 1 : -1;
+    return (a.joinedAt || '').localeCompare(b.joinedAt || '');
+  });
+
+  let terminalNum = 0;
+  listEl.innerHTML = sorted.map(d => {
+    terminalNum++;
+    const isActive = d.connected !== false;
+    const since    = d.joinedAt ? new Date(d.joinedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+    const ip       = d.ipAddress || 'N/A';
+    const location = d.location  || 'Not shared';
+    const drive    = d.driveType || 'Unknown';
+    const label    = `Terminal ${terminalNum}`;
+    const safeId   = (d.id || '').replace(/[^a-zA-Z0-9_-]/g, '_');
+
     return `
-      <div class="device-item">
-        <span class="device-dot ${isActive ? 'active' : 'inactive'}"></span>
-        <span class="device-name">${label}${since ? ` <span style="font-size:10px;color:var(--text-lt);">since ${since}</span>` : ''}</span>
-        <span class="device-badge ${isActive ? 'active' : 'inactive'}">${isActive ? 'Active' : 'Inactive'}</span>
+      <div class="device-item ${isActive ? 'active-device' : 'inactive-device'}" id="device-card-${safeId}">
+        <div class="device-item-top">
+          <span class="device-dot ${isActive ? 'active' : 'inactive'}"></span>
+          <span class="device-name">${label}</span>
+          <span class="device-badge ${isActive ? 'active' : 'inactive'}">${isActive ? 'Active' : 'Inactive'}</span>
+        </div>
+        <div class="device-details">
+          <div class="device-detail-row">💻 <strong>${drive}</strong></div>
+          <div class="device-detail-row">🌐 <strong>${ip}</strong></div>
+          <div class="device-detail-row">📍 <strong title="${location}">${location.length > 22 ? location.slice(0,22)+'…' : location}</strong></div>
+          <div class="device-detail-row">🕐 <strong>since ${since}</strong></div>
+        </div>
+        <div class="device-item-footer">
+          ${isActive
+            ? `<button class="btn-device-toggle disconnect" onclick="adminDisconnectDevice('${safeId}')">Disconnect</button>`
+            : `<button class="btn-device-toggle reconnect" onclick="adminReconnectDevice('${safeId}')">Reconnect</button>`
+          }
+        </div>
       </div>`;
   }).join('');
+}
+
+/** Admin-side: mark a device as manually disconnected (local UI only — no way to force-close a remote tab) */
+function adminDisconnectDevice(safeId) {
+  const realId = Object.keys(knownDevices).find(k => k.replace(/[^a-zA-Z0-9_-]/g, '_') === safeId);
+  if (!realId) return;
+  knownDevices[realId].connected = false;
+  updateConnectedDevices(Object.values(knownDevices).filter(d => d.connected !== false));
+  showToast('Terminal marked as disconnected.', 'info', 2500);
+}
+
+/** Admin-side: re-mark a device as active (restore to connected state in local UI) */
+function adminReconnectDevice(safeId) {
+  const realId = Object.keys(knownDevices).find(k => k.replace(/[^a-zA-Z0-9_-]/g, '_') === safeId);
+  if (!realId) return;
+  knownDevices[realId].connected = true;
+  updateConnectedDevices(Object.values(knownDevices).filter(d => d.connected !== false));
+  showToast('Terminal marked as reconnected.', 'success', 2500);
 }
 
 // ════ PRESENCE — track connected voting terminals ════
@@ -2140,17 +2402,42 @@ function setupPresenceTracking() {
         for (const [, presences] of Object.entries(state)) {
           for (const p of presences) {
             if (p.role === 'terminal') {
-              devices.push({ id: p.deviceId, joinedAt: p.joinedAt, active: true });
+              devices.push({
+                id:        p.deviceId,
+                joinedAt:  p.joinedAt,
+                active:    true,
+                connected: true,
+                driveType: p.driveType  || 'Unknown',
+                ipAddress: p.ipAddress  || 'N/A',
+                location:  p.location   || 'Not shared',
+              });
             }
           }
         }
         updateConnectedDevices(devices);
       })
       .on('presence', { event: 'join' }, ({ newPresences }) => {
-        showToast(`A voting terminal just connected.`, 'success', 3000);
+        for (const p of (newPresences || [])) {
+          if (p.role === 'terminal') {
+            const drive = p.driveType || 'Unknown';
+            showToast(`Voting terminal connected (${drive}).`, 'success', 3000);
+          }
+        }
       })
       .on('presence', { event: 'leave' }, ({ leftPresences }) => {
-        showToast(`A voting terminal disconnected.`, 'warning', 3000);
+        for (const p of (leftPresences || [])) {
+          if (p.role === 'terminal') {
+            // Mark device inactive in knownDevices; re-render
+            const id = p.deviceId;
+            if (id && knownDevices[id]) {
+              knownDevices[id].connected = false;
+            }
+            showToast(`A voting terminal disconnected.`, 'warning', 3000);
+          }
+        }
+        // Re-render with current active set
+        const activeDevices = Object.values(knownDevices).filter(d => d.connected !== false);
+        updateConnectedDevices(activeDevices);
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -2363,23 +2650,59 @@ function initVotingTerminal() {
     return;
   }
   // Announce this terminal via Presence so the admin panel shows it immediately
-  announceTerminalPresence();
+  announceTerminalPresence(); // runs async — non-blocking intentionally so pin screen appears fast
   showPinScreen();
 }
 
 let terminalPresenceChannel = null;
-function announceTerminalPresence() {
+async function announceTerminalPresence() {
   if (!db) return;
   try {
     const deviceId = `terminal-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
+    // ── Detect drive type from User-Agent ───────────────────
+    const ua = navigator.userAgent || '';
+    let driveType = 'Unknown';
+    if (/iPad|iPhone|iPod/.test(ua))           driveType = 'iOS';
+    else if (/Android/.test(ua))               driveType = 'Android';
+    else if (/Windows/.test(ua))               driveType = 'Windows PC';
+    else if (/Macintosh|Mac OS X/.test(ua))    driveType = 'Mac';
+    else if (/Linux/.test(ua))                 driveType = 'Linux';
+    else if (/CrOS/.test(ua))                  driveType = 'Chromebook';
+
+    // ── Attempt to get public IP ─────────────────────────────
+    let ipAddress = 'N/A';
+    try {
+      const ipRes = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(3000) });
+      if (ipRes.ok) { const ipData = await ipRes.json(); ipAddress = ipData.ip || 'N/A'; }
+    } catch (_) { ipAddress = window.location.hostname || 'N/A'; }
+
+    // ── Attempt to get geolocation ───────────────────────────
+    let location = 'Not shared';
+    try {
+      await new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            location = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
+            resolve();
+          },
+          () => resolve(), // ignore permission denied
+          { timeout: 4000, maximumAge: 60000 }
+        );
+      });
+    } catch (_) {}
+
     terminalPresenceChannel = db.channel('terminal-presence');
     terminalPresenceChannel.subscribe(async (status) => {
       if (status === 'SUBSCRIBED') {
         await terminalPresenceChannel.track({
-          role: 'terminal',
+          role:      'terminal',
           deviceId,
-          joinedAt: new Date().toISOString(),
-          active: true,
+          joinedAt:  new Date().toISOString(),
+          active:    true,
+          driveType,
+          ipAddress,
+          location,
         });
       }
     });
@@ -2808,6 +3131,8 @@ async function renderFinalResults() {
   });
 }
 
+
+
 // ════ CONFETTI ════
 function spawnConfetti() {
   const container = document.querySelector('.done-confetti');
@@ -2860,6 +3185,152 @@ function showToast(message, type = 'info', duration = 4500) {
     });
   });
 }
+// ════ EDIT / DELETE — CANDIDATES ════
+
+function openEditCandidateModal(id) {
+  const c = appState.candidates.find(x => x.id === id);
+  if (!c) return;
+
+  document.getElementById('edit-cand-id').value = id;
+  document.getElementById('edit-cand-name').value = c.name;
+
+  // Populate position dropdown
+  const sel = document.getElementById('edit-cand-position');
+  sel.innerHTML = appState.positions.map(p =>
+    `<option value="${p.id}" ${p.id === c.position_id ? 'selected' : ''}>${p.title}</option>`
+  ).join('');
+
+  document.getElementById('edit-candidate-modal').classList.add('open');
+  document.getElementById('edit-cand-name').focus();
+}
+
+function closeEditCandidateModal() {
+  document.getElementById('edit-candidate-modal').classList.remove('open');
+}
+
+async function saveEditCandidate() {
+  const id          = document.getElementById('edit-cand-id').value;
+  const name        = document.getElementById('edit-cand-name').value.trim();
+  const position_id = document.getElementById('edit-cand-position').value;
+
+  if (!name)        { showToast('Name cannot be empty.', 'warning'); return; }
+  if (!position_id) { showToast('Please select a position.', 'warning'); return; }
+
+  const saveBtn = document.querySelector('#edit-candidate-modal .btn-primary');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+  try {
+    const updated = await updateCandidate(id, { name, position_id });
+    // Patch local state
+    const idx = appState.candidates.findIndex(x => x.id === id);
+    if (idx !== -1) {
+      appState.candidates[idx].name        = name;
+      appState.candidates[idx].position_id = position_id;
+      appState.candidates[idx].positions   = appState.positions.find(p => p.id === position_id) || appState.candidates[idx].positions;
+    }
+    closeEditCandidateModal();
+    renderCandidateList();
+    showToast(`Candidate updated successfully.`, 'success');
+  } catch (e) {
+    console.error('Update candidate error:', e);
+    showToast('Update failed: ' + e.message, 'error');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; }
+  }
+}
+
+async function deleteCandidateHandler(id) {
+  const c = appState.candidates.find(x => x.id === id);
+  if (!c) return;
+  if (!confirm(`Delete "${c.name}" from the candidate list? This cannot be undone.`)) return;
+  try {
+    await deleteCandidate(id);
+    appState.candidates = appState.candidates.filter(x => x.id !== id);
+    renderCandidateList();
+    renderHomepage();
+    showToast(`"${c.name}" removed from candidates.`, 'success');
+  } catch (e) {
+    console.error('Delete candidate error:', e);
+    showToast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// ════ EDIT / DELETE — VOTERS ════
+
+function openEditVoterModal(id) {
+  const v = appState.voters.find(x => x.id === id);
+  if (!v) return;
+
+  document.getElementById('edit-voter-id').value   = id;
+  document.getElementById('edit-voter-name').value  = v.name;
+  document.getElementById('edit-voter-year').value  = v.academic_year;
+
+  document.getElementById('edit-voter-modal').classList.add('open');
+  document.getElementById('edit-voter-name').focus();
+}
+
+function closeEditVoterModal() {
+  document.getElementById('edit-voter-modal').classList.remove('open');
+}
+
+async function saveEditVoter() {
+  const id   = document.getElementById('edit-voter-id').value;
+  const name = document.getElementById('edit-voter-name').value.trim();
+  const year = document.getElementById('edit-voter-year').value.trim();
+
+  if (!name) { showToast('Name cannot be empty.', 'warning'); return; }
+  if (!year) { showToast('Academic year cannot be empty.', 'warning'); return; }
+
+  const saveBtn = document.querySelector('#edit-voter-modal .btn-primary');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+  try {
+    await updateVoter(id, { name, academic_year: year });
+    // Patch local state
+    const idx = appState.voters.findIndex(x => x.id === id);
+    if (idx !== -1) {
+      appState.voters[idx].name          = name;
+      appState.voters[idx].academic_year = year;
+    }
+    closeEditVoterModal();
+    renderVoterList();
+    showToast(`Voter updated successfully.`, 'success');
+  } catch (e) {
+    console.error('Update voter error:', e);
+    showToast('Update failed: ' + e.message, 'error');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; }
+  }
+}
+
+async function deleteVoterHandler(id) {
+  const v = appState.voters.find(x => x.id === id);
+  if (!v) return;
+  if (!confirm(`Delete "${v.name}" from the voter list? This cannot be undone.`)) return;
+  try {
+    await deleteVoter(id);
+    appState.voters = appState.voters.filter(x => x.id !== id);
+    renderVoterList();
+    renderHomepage();
+    showToast(`"${v.name}" removed from voters.`, 'success');
+  } catch (e) {
+    console.error('Delete voter error:', e);
+    showToast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// Close edit modals on Escape key (extends existing setupModals keydown listener)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeEditCandidateModal(); closeEditVoterModal(); }
+});
+// Close edit modals on backdrop click
+document.getElementById('edit-candidate-modal')?.addEventListener('click', e => {
+  if (e.target === document.getElementById('edit-candidate-modal')) closeEditCandidateModal();
+});
+document.getElementById('edit-voter-modal')?.addEventListener('click', e => {
+  if (e.target === document.getElementById('edit-voter-modal')) closeEditVoterModal();
+});
+
 </script>
 </body>
 </html>
