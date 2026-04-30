@@ -1815,14 +1815,18 @@ function renderCandidateRegistration() {
   const addPosBtn = document.querySelector('button[onclick="addPositionHandler()"]');
   if (saveBtn) { saveBtn.disabled = isLocked; saveBtn.title = isLocked ? 'Registration is closed' : ''; }
   if (addPosBtn) { addPosBtn.disabled = isLocked; addPosBtn.title = isLocked ? 'Registration is closed' : ''; }
-  if (isLocked) {
-    const notice = document.createElement('div');
-    notice.className = 'locked-notice';
-    notice.innerHTML = appState.electionStatus === STATE.VOTING_ACTIVE
-      ? '🔒 Voting is in progress — registration is locked.'
-      : '🔒 Registration is closed.';
-    const candCard = document.querySelector('#section-candidate-reg .two-col > div:first-child .card:last-child');
-    if (candCard && !candCard.querySelector('.locked-notice')) candCard.prepend(notice);
+  const candCard = document.querySelector('#section-candidate-reg .two-col > div:first-child .card:last-child');
+  if (candCard) {
+    // Always clear any stale notice first (e.g. after a new year is opened)
+    candCard.querySelectorAll('.locked-notice').forEach(el => el.remove());
+    if (isLocked) {
+      const notice = document.createElement('div');
+      notice.className = 'locked-notice';
+      notice.innerHTML = appState.electionStatus === STATE.VOTING_ACTIVE
+        ? '🔒 Voting is in progress — registration is locked.'
+        : '🔒 Registration is closed.';
+      candCard.prepend(notice);
+    }
   }
 }
 function renderPositionManager() {
@@ -2004,14 +2008,18 @@ function renderVoterRegistration() {
   });
   const saveBtn = document.querySelector('button[onclick="submitVoterForm()"]');
   if (saveBtn) { saveBtn.disabled = isLocked; saveBtn.title = isLocked ? 'Registration is closed' : ''; }
-  if (isLocked) {
-    const notice = document.createElement('div');
-    notice.className = 'locked-notice';
-    notice.innerHTML = appState.electionStatus === STATE.VOTING_ACTIVE
-      ? '🔒 Voting is in progress — voter registration is locked.'
-      : '🔒 Registration is closed.';
-    const voterCard = document.querySelector('#section-voter-reg .two-col .card:first-child');
-    if (voterCard && !voterCard.querySelector('.locked-notice')) voterCard.prepend(notice);
+  const voterCard = document.querySelector('#section-voter-reg .two-col .card:first-child');
+  if (voterCard) {
+    // Always clear any stale notice first (e.g. after a new year is opened)
+    voterCard.querySelectorAll('.locked-notice').forEach(el => el.remove());
+    if (isLocked) {
+      const notice = document.createElement('div');
+      notice.className = 'locked-notice';
+      notice.innerHTML = appState.electionStatus === STATE.VOTING_ACTIVE
+        ? '🔒 Voting is in progress — voter registration is locked.'
+        : '🔒 Registration is closed.';
+      voterCard.prepend(notice);
+    }
   }
 }
 async function submitVoterForm() {
