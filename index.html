@@ -1716,7 +1716,7 @@ function applyAcademicYearToAllFields() {
   const yr = appState.academicYear;
   ['candidate-year', 'voter-year', 'stats-year'].forEach(id => {
     const el = document.getElementById(id);
-    if (el && !el.value) el.value = yr;
+    if (el) el.value = yr;
   });
   document.querySelectorAll('.academic-year-display').forEach(el => el.textContent = yr);
   const headerYear = document.getElementById('header-year-badge');
