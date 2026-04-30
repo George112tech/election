@@ -2252,7 +2252,7 @@ function renderVotingSection() {
   }
   document.getElementById('voting-locked-msg').style.display = 'none';
   document.getElementById('voting-main').style.display = 'block';
-  if (appState.electionStatus === STATE.VOTING_COMPLETE) { renderFinalResults(); return; }
+  if (appState.electionStatus === STATE.VOTING_COMPLETE) { renderFinalResultsGate(); return; }
   generateQRCode();
   renderLiveCharts();
   // Start presence tracking + auto-refresh when admin opens voting section
@@ -2471,7 +2471,8 @@ function stopAutoRefresh() {
 async function checkVotingComplete() {
   try {
     const voters = await getVoters(appState.academicYear);
-    const allUsed = usedCount >= voters.length;
+    const usedCount = voters.filter(v => v.pin_used).length;
+    const allUsed = voters.length > 0 && usedCount >= voters.length;
     // Update voter list in appState
     appState.voters = voters;
     // Update home stats if visible
@@ -2484,9 +2485,9 @@ async function checkVotingComplete() {
       updateNavState();
       renderHomepage();
       showToast('All votes cast — election is now complete!', 'success', 6000);
-      // Auto-transition to final results if on the voting section
+      // Auto-transition to final results gate if on the voting section
       if (appState.currentSection === 'voting') {
-        setTimeout(() => renderFinalResults(), 1200);
+        setTimeout(() => renderFinalResultsGate(), 1200);
       }
     }
   } catch (e) { console.warn('checkVotingComplete error:', e); }
@@ -3057,6 +3058,33 @@ function resetTerminal() {
 }
 
 // ════ FINAL RESULTS ════
+
+/** Shows a locked banner + "Display Final Results" button instead of immediately revealing results */
+function renderFinalResultsGate() {
+  const main = document.getElementById('voting-main');
+  if (!main) return;
+  main.innerHTML = `
+    <div class="final-results-banner" style="margin-bottom:0;">
+      <h2>Election Complete</h2>
+      <p>Academic Year: <strong>${appState.academicYear}</strong></p>
+      <p style="margin-top:8px;opacity:0.7;font-size:13px;">All votes have been cast. The results are ready.</p>
+    </div>
+    <div style="display:flex;justify-content:center;padding:48px 24px;">
+      <button
+        class="btn btn-primary btn-lg"
+        onclick="renderFinalResults()"
+        style="font-size:17px;padding:18px 48px;gap:12px;box-shadow:0 6px 28px rgba(126,198,72,0.4);"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="8,21 12,17 16,21"/><line x1="12" y1="17" x2="12" y2="11"/>
+          <path d="M7 4H4v6a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5V4h-3"/><path d="M7 4h10"/>
+        </svg>
+        Display Final Results
+      </button>
+    </div>
+  `;
+}
+
 async function renderFinalResults() {
   const main = document.getElementById('voting-main');
   if (!main) return;
