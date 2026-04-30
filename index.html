@@ -1425,9 +1425,11 @@ async function uploadCandidatePhoto(file) {
 }
 
 // VOTERS
-async function getVoters() {
+async function getVoters(academicYear = null) {
   return safeDb(async () => {
-    const { data, error } = await db.from('voters').select('*').order('created_at');
+    let query = db.from('voters').select('*').order('created_at');
+    if (academicYear) query = query.eq('academic_year', academicYear);
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   }, []);
@@ -1457,7 +1459,7 @@ async function deleteVoter(id) {
 // PIN MANAGEMENT
 async function generateAndAssignPins() {
   return safeDb(async () => {
-    const voters = await getVoters();
+    const voters = await getVoters(appState.academicYear);
     const usedPins = new Set();
     for (const voter of voters) {
       let pin;
@@ -1474,7 +1476,7 @@ async function generateAndAssignPins() {
 async function verifyPin(pin) {
   if (!db) { console.error('verifyPin: database not initialized'); return null; }
   return safeDb(async () => {
-    const { data, error } = await db.from('voters').select('*').eq('pin', pin).single();
+    const { data, error } = await db.from('voters').select('*').eq('pin', pin).eq('academic_year', appState.academicYear).single();
     if (error) return null;
     return data;
   }, null);
@@ -1696,7 +1698,7 @@ async function loadInitialState() {
 
     appState.positions  = await getPositions();
     appState.candidates = await getCandidates(appState.academicYear);
-    appState.voters     = await getVoters();
+    appState.voters     = await getVoters(appState.academicYear);
 
     updateNavState();
     applyAcademicYearToAllFields();
@@ -2168,7 +2170,7 @@ async function closeRegistration() {
     await generateAndAssignPins();
     appState.electionStatus = STATE.VOTING_ACTIVE;
     await setElectionState(appState.academicYear, STATE.VOTING_ACTIVE);
-    appState.voters = await getVoters();
+    appState.voters = await getVoters(appState.academicYear);
     updateNavState();
     renderHomepage();
     renderVoterList();
@@ -2468,9 +2470,7 @@ function stopAutoRefresh() {
 
 async function checkVotingComplete() {
   try {
-    const voters = await getVoters();
-    if (!voters.length) return;
-    const usedCount = voters.filter(v => v.pin_used).length;
+    const voters = await getVoters(appState.academicYear);
     const allUsed = usedCount >= voters.length;
     // Update voter list in appState
     appState.voters = voters;
@@ -3062,7 +3062,7 @@ async function renderFinalResults() {
   if (!main) return;
 
   const results  = await getVotesForYear(appState.academicYear);
-  const voters   = await getVoters();
+  const voters   = await getVoters(appState.academicYear);
   const usedCount = voters.filter(v => v.pin_used).length;
   const turnoutPct = voters.length ? Math.round(usedCount / voters.length * 100) : 0;
 
